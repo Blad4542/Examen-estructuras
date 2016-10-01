@@ -231,9 +231,8 @@ void imprimeExamen_Breve(string nombreE){
         cout<<"Seccion: "<<tempImprime->b->nombreB<<endl;
 
         while(tempImprime != NULL){
-                cout<<temp->eb->puntaje<<endl;
                 cout<<"Id: "<<tempImprime->id<<endl;
-                cout<<"Puntos: "<< tempImprime->puntaje<< endl;
+                cout<<"Puntos: "<<tempImprime->puntaje<< endl;
                 cout<<"Pregunta: "<<tempImprime->pregunta<<endl;
 
                 tempImprime = tempImprime-> sig;
