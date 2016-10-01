@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1475285253 source:c:\users\peniche\documents\l proyecto\main.cpp
+	<iostream>
+	<stdlib.h>
+	<cstring>
+
