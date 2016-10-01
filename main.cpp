@@ -333,7 +333,7 @@ void imprime(string nombreE){
     {
         cout <<"\nProgramas  relacionados con: "<< temp -> nombreE <<"."<<endl;
         struct examen_breve * tempImprime = temp->eb;
-
+    //probando git
 
         while(tempImprime != NULL){
                 if(tempImprime->b->c == "Preventivo"){
