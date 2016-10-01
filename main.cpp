@@ -324,28 +324,30 @@ void imprime(string nombreE){
         cout<<"\nEste examen no existe o la lista esta vacia..!!"<<endl;
         return;
     }
-    cout<<"Secciones de: "<< temp->nombreE <<"."<< endl;
+    cout<<"Secciones del examen: "<< temp->nombreE <<"."<< endl;
 
     if (temp->eb == NULL){
         cout<<"\nEste examen no tiene una respuesta breve creada..."<<endl;
     }
     else
     {
-        cout <<"\nProgramas  relacionados con: "<< temp -> nombreE <<"."<<endl;
         struct examen_breve * tempImprime = temp->eb;
-    //probando git
+
 
         while(tempImprime != NULL){
-                if(tempImprime->b->c == "Preventivo"){
-                    cout<<"Fecha: "<< tempPrograma->p->nombre<< endl;
-                    cout<<"Clasificacion: "<<tempPrograma->p->clasificacion<<endl;
-                    cout<<"Actividad: "<<tempPrograma->p->actividad<<endl<<endl;
-                }
-                tempPrograma = tempPrograma-> sig;
+            cout<<"Seccion: "<<tempImprime->b<<endl;
+            cout<<"Id: "<< tempImprime->id<< endl;
+            cout<<"Puntos: "<< tempImprime->puntaje<< endl;
+            cout<<"Pregunta: "<<tempImprime->pregunta<<endl;
+
+            //cout<<"Clasificacion: "<<tempPrograma->p->clasificacion<<endl;
+            //cout<<"Actividad: "<<tempPrograma->p->actividad<<endl<<endl;
+
+                tempImprime = tempImprime-> sig;
 
             }
 
-            tempPrograma = temp->cp;
+            tempImprime = temp->eb;
     }
 }
 
@@ -357,5 +359,5 @@ int main()
     insertarBreve("Breve1");
     insertarExamen_breve(1,23,"yo soy","yo","Breve1","E1");
     imprime("E1");
-    imprimeBreve();
+    //imprimeBreve();
 }
