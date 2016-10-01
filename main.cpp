@@ -34,10 +34,19 @@ struct alternativa{
 
 struct breve{
     string nombreB;
+    int id, puntaje;
+    string pregunta, resCorrecta;
     struct breve *sig;
-    breve(string n){
+    struct breve *ant;
+
+    breve(string n, int id, int p, string preg, string resC){
         nombreB = n;
+        id = id;
+        puntaje = p;
+        pregunta = preg;
+        resCorrecta = resC;
         sig = NULL;
+        ant = NULL;
 
     }
 }*primeroB;
@@ -59,16 +68,11 @@ struct unica{
 }*primeroU;
 
 struct examen_breve{
-    int id, puntaje;
-    string pregunta, resCorrecta;
     struct breve * b;
     struct examen_breve * sig;
+    struct examen_breve * eb;
 
-    examen_breve(int id, int puntaje, string pregunta, string resCorrecta){
-        id = id;
-        puntaje = puntaje;
-        pregunta = pregunta;
-        resCorrecta = resCorrecta;
+    examen_breve(){
         sig = NULL;
         b = NULL;
 
@@ -144,31 +148,52 @@ void insertarUnica(int num, int puntaje, string pregunta, string resCorrecta){
     primeroU = nn;
 }
 
-void insertarBreve(string nombre){
-    struct breve * buscar = buscarBreve(nombre);
+/*void insertarBreve(string nombreB, int id, int puntaje, string pregunta, string resCorrecta){
 
-    struct breve * nn = new breve(nombre);
+    struct breve * buscar = buscarBreve(nombreB);
+    struct breve * nn = new breve(nombreB, id, puntaje, pregunta, resCorrecta);
+
+    if(buscar != NULL){
+        cout<< "\nEsta seccion ya existe!...\n";
+        return;
+    }
+    if(primeroB == NULL){
+        primeroB = nn;
+    }
+    else{
+        struct breve * temp = primeroB;
+        while(temp->sig != NULL){
+            temp = temp ->sig;
+        }
+        temp->sig = nn;
+        nn->ant = temp;
+    }
+}*/
+
+void insertarBreve(string n, int id, int p, string preg, string resC){
+    struct breve * buscar = buscarBreve(n);
+
+    struct breve * nn = new breve(n, id, p, preg, resC);
     nn->sig = primeroB;
     primeroB = nn;
 }
 
-void insertarExamen_breve(int id, int puntaje, string pregunta, string resCorrecta,
-string nombreS, string nombreE){
+void insertarExamen_breve(string nombreB, string nombreE){
 
-    struct breve * tempB = buscarBreve(nombreS);
+    struct breve * tempB = buscarBreve(nombreB);
     struct examen * tempE = buscarExamen(nombreE);
 
     if((tempE != NULL)&&(tempB != NULL)){
-        struct examen_breve *nn = new examen_breve(id, puntaje, pregunta,resCorrecta);
+        struct examen_breve *nn = new examen_breve();
         nn->b = tempB;
         nn->sig = tempE->eb;
         tempE->eb = nn;
     }
 }
 
-void insertarExamen(string nombre, int puntos){
-    struct examen * buscar = buscarExamen(nombre);
-    struct examen * nn = new examen(nombre,puntos);
+void insertarExamen(string nombreE, int puntos){
+    struct examen * buscar = buscarExamen(nombreE);
+    struct examen * nn = new examen(nombreE,puntos);
 
     string opcion;
 
@@ -203,12 +228,21 @@ void imprimeExamen(){
     }
 }
 
-void imprimeBreve(struct breve * temp = primeroB){
-    if(temp == NULL)
-        return;
+void imprimeBreve(){
 
-    imprimeBreve(temp->sig);
-    cout<<"Nombre de la Seccion: "<<temp->nombreB<<endl;
+    if(primeroB== NULL){
+        cout<<"\nNo se encuentran datos\n";
+    }
+    else{
+        struct breve * temp = primeroB;
+        while(temp != NULL){
+            cout<<"\nNombre: "<<temp->nombreB<<endl;
+            cout<<"\nPuntaje: "<<temp->puntaje<<endl;
+            cout<<"\nPregunta: "<<temp->pregunta<<endl;
+            //cout<<"\n: "<<temp->resCorrecta<<endl;
+            temp = temp ->sig;
+        }
+    }
 }
 
 void imprimeExamen_Breve(string nombreE){
@@ -221,7 +255,6 @@ void imprimeExamen_Breve(string nombreE){
     }
     cout<<"Secciones del examen: "<< temp->nombreE <<"."<< endl;
 
-
     if (temp->eb == NULL){
         cout<<"\nEste examen no tiene una respuesta breve creada..."<<endl;
     }
@@ -231,13 +264,11 @@ void imprimeExamen_Breve(string nombreE){
         cout<<"Seccion: "<<tempImprime->b->nombreB<<endl;
 
         while(tempImprime != NULL){
-                cout<<"Id: "<<tempImprime->id<<endl;
-                cout<<"Puntos: "<<tempImprime->puntaje<< endl;
-                cout<<"Pregunta: "<<tempImprime->pregunta<<endl;
-
+                cout<<"Id: "<<tempImprime->b->id<<endl;
+                cout<<"Puntos: "<<tempImprime->b->puntaje<< endl;
+                cout<<"Pregunta: "<<tempImprime->b->pregunta<<endl;
                 tempImprime = tempImprime-> sig;
             }
-            tempImprime = temp->eb;
     }
 
 }
@@ -355,14 +386,14 @@ void loadData(){
 
 
    ///-----------------------RESPUESTA BREVE-----------------///
-   insertarBreve("Breve1");
-   insertarBreve("Breve1");
-   insertarBreve("Breve1");
+   insertarBreve("Breve1",1,23,"yo soy","yo");
+   insertarBreve("Breve1",2,23,"yo soy","yo");
+   insertarBreve("Breve1",3,23,"yo soy","yo");
 
     ///-------------------------EXAMEN CON RESPUESTA BREVE---------------------///
-    insertarExamen_breve(1,23,"yo soy","yo","Breve1","E1");
-    insertarExamen_breve(2,23,"yo soy","yo","Breve1","E1");
-    insertarExamen_breve(3,23,"yo soy","yo","Breve1","E1");
+    insertarExamen_breve("Breve1","E1");
+    insertarExamen_breve("Breve1","E1");
+    insertarExamen_breve("Breve1","E1");
 
 }
 
@@ -372,7 +403,8 @@ void loadData(){
 int main()
 {
     loadData();
+    imprimeExamen_Breve("E1");
     //menuPrincipal();
 
-    imprimeExamen_Breve("E1");
+    //imprimeExamen_Breve("E1");
 }
