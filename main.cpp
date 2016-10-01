@@ -166,7 +166,6 @@ string nombreS, string nombreE){
     }
 }
 
-
 void insertarExamen(string nombre, int puntos){
     struct examen * buscar = buscarExamen(nombre);
     struct examen * nn = new examen(nombre,puntos);
@@ -210,6 +209,38 @@ void imprimeBreve(struct breve * temp = primeroB){
 
     imprimeBreve(temp->sig);
     cout<<"Nombre de la Seccion: "<<temp->nombreB<<endl;
+}
+
+void imprimeExamen_Breve(string nombreE){
+    struct examen * temp = buscarExamen(nombreE);
+
+    if (temp == NULL)
+    {
+        cout<<"\nEste examen no existe o la lista esta vacia..!!"<<endl;
+        return;
+    }
+    cout<<"Secciones del examen: "<< temp->nombreE <<"."<< endl;
+
+
+    if (temp->eb == NULL){
+        cout<<"\nEste examen no tiene una respuesta breve creada..."<<endl;
+    }
+    else
+    {
+        struct examen_breve * tempImprime = temp->eb;
+        cout<<"Seccion: "<<tempImprime->b->nombreB<<endl;
+
+        while(tempImprime != NULL){
+                cout<<temp->eb->puntaje<<endl;
+                cout<<"Id: "<<tempImprime->id<<endl;
+                cout<<"Puntos: "<< tempImprime->puntaje<< endl;
+                cout<<"Pregunta: "<<tempImprime->pregunta<<endl;
+
+                tempImprime = tempImprime-> sig;
+            }
+            tempImprime = temp->eb;
+    }
+
 }
 
 void imprimeUnica(){
@@ -316,48 +347,33 @@ void menuPrincipal(){
     }
 }
 
-void imprime(string nombreE){
-    struct examen * temp = buscarExamen(nombreE);
+void loadData(){
 
-    if (temp == NULL)
-    {
-        cout<<"\nEste examen no existe o la lista esta vacia..!!"<<endl;
-        return;
-    }
-    cout<<"Secciones del examen: "<< temp->nombreE <<"."<< endl;
-
-    if (temp->eb == NULL){
-        cout<<"\nEste examen no tiene una respuesta breve creada..."<<endl;
-    }
-    else
-    {
-        struct examen_breve * tempImprime = temp->eb;
+    ///-------------------EXAMENES---------------------------///
+   insertarExamen("E1",56);
+   insertarExamen("E2",56);
+   insertarExamen("E3",56);
 
 
-        while(tempImprime != NULL){
-            cout<<"Seccion: "<<tempImprime->b<<endl;
-            cout<<"Id: "<< tempImprime->id<< endl;
-            cout<<"Puntos: "<< tempImprime->puntaje<< endl;
-            cout<<"Pregunta: "<<tempImprime->pregunta<<endl;
+   ///-----------------------RESPUESTA BREVE-----------------///
+   insertarBreve("Breve1");
+   insertarBreve("Breve1");
+   insertarBreve("Breve1");
 
-            //cout<<"Clasificacion: "<<tempPrograma->p->clasificacion<<endl;
-            //cout<<"Actividad: "<<tempPrograma->p->actividad<<endl<<endl;
+    ///-------------------------EXAMEN CON RESPUESTA BREVE---------------------///
+    insertarExamen_breve(1,23,"yo soy","yo","Breve1","E1");
+    insertarExamen_breve(2,23,"yo soy","yo","Breve1","E1");
+    insertarExamen_breve(3,23,"yo soy","yo","Breve1","E1");
 
-                tempImprime = tempImprime-> sig;
-
-            }
-
-            tempImprime = temp->eb;
-    }
 }
+
+
 
 ///-------------------------------------------FIN MENU-----------------------------------------------------///
 int main()
 {
+    loadData();
     //menuPrincipal();
-    insertarExamen("E1",56);
-    insertarBreve("Breve1");
-    insertarExamen_breve(1,23,"yo soy","yo","Breve1","E1");
-    imprime("E1");
-    //imprimeBreve();
+
+    imprimeExamen_Breve("E1");
 }
