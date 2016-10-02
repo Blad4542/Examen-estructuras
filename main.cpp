@@ -12,10 +12,9 @@ struct examen{
     struct examen_breve * eb;
     struct examen_unica * eu;
 
-    examen(string n,int p){
+    examen(string n){
         nombreE = n;
         sig = NULL;
-        puntos = p;
         eb = NULL;
         eu = NULL;
     }
@@ -39,9 +38,9 @@ struct breve{
     struct breve *sig;
     struct breve *ant;
 
-    breve(string n, int id, int p, string preg, string resC){
+    breve(string n, int i, int p, string preg, string resC){
         nombreB = n;
-        id = id;
+        id = i;
         puntaje = p;
         pregunta = preg;
         resCorrecta = resC;
@@ -61,7 +60,6 @@ struct unica{
         num = n;
         puntaje = p;
         pregunta = pre;
-
         resCorrecta = rC;
         sig = NULL;
     }
@@ -99,6 +97,8 @@ void menuPrincipal();
 void menuMante();
 void menuSolu();
 void menuCrear();
+void menuModificar();
+void menuBorrar();
 
 ///------------------------FIN DECLARACION DE METODOS---------------------------------///
 
@@ -148,32 +148,10 @@ void insertarUnica(int num, int puntaje, string pregunta, string resCorrecta){
     primeroU = nn;
 }
 
-/*void insertarBreve(string nombreB, int id, int puntaje, string pregunta, string resCorrecta){
-
-    struct breve * buscar = buscarBreve(nombreB);
-    struct breve * nn = new breve(nombreB, id, puntaje, pregunta, resCorrecta);
-
-    if(buscar != NULL){
-        cout<< "\nEsta seccion ya existe!...\n";
-        return;
-    }
-    if(primeroB == NULL){
-        primeroB = nn;
-    }
-    else{
-        struct breve * temp = primeroB;
-        while(temp->sig != NULL){
-            temp = temp ->sig;
-        }
-        temp->sig = nn;
-        nn->ant = temp;
-    }
-}*/
-
-void insertarBreve(string n, int id, int p, string preg, string resC){
+void insertarBreve(string n, int i, int p, string preg, string resC){
     struct breve * buscar = buscarBreve(n);
 
-    struct breve * nn = new breve(n, id, p, preg, resC);
+    struct breve * nn = new breve(n, i, p, preg, resC);
     nn->sig = primeroB;
     primeroB = nn;
 }
@@ -191,9 +169,9 @@ void insertarExamen_breve(string nombreB, string nombreE){
     }
 }
 
-void insertarExamen(string nombreE, int puntos){
+void insertarExamen(string nombreE){
     struct examen * buscar = buscarExamen(nombreE);
-    struct examen * nn = new examen(nombreE,puntos);
+    struct examen * nn = new examen(nombreE);
 
     string opcion;
 
@@ -204,15 +182,6 @@ void insertarExamen(string nombreE, int puntos){
     }
     nn->sig = primeroE;
     primeroE = nn;
-    /*cout<<"Digite que desea agregar:";
-    cout<<"\n1.Unica";
-    cout<<"\n2.Breve";
-    cin>>opcion;
-    if(opcion == "2"){
-        system("cls");
-        insertarBreve(1,2,"quien soy yo","yo");
-        nn->rep = primeroB;
-    }*/
 
 }
 
@@ -223,26 +192,23 @@ void imprimeExamen(){
     struct examen * temp = primeroE;
 
     while(temp != NULL){
-        cout<<temp->nombreE<<", "<<temp->puntos<<endl;
+        cout<<temp->nombreE<<endl;
         temp = temp->sig;
     }
 }
 
-void imprimeBreve(){
+void imprimeBreve(struct breve * primeroB){
 
-    if(primeroB== NULL){
-        cout<<"\nNo se encuentran datos\n";
-    }
-    else{
-        struct breve * temp = primeroB;
-        while(temp != NULL){
-            cout<<"\nNombre: "<<temp->nombreB<<endl;
-            cout<<"\nPuntaje: "<<temp->puntaje<<endl;
-            cout<<"\nPregunta: "<<temp->pregunta<<endl;
-            //cout<<"\n: "<<temp->resCorrecta<<endl;
-            temp = temp ->sig;
-        }
-    }
+    if(primeroB == NULL)
+        return;
+
+    imprimeBreve(primeroB->sig);
+    cout<<primeroB->nombreB<<endl;
+    cout<<endl;
+    cout<<"Id pregunta: "<<primeroB->id<<endl;
+    cout<<"Valor: "<<primeroB->puntaje<<" puntos"<<endl;
+    cout<<"Pregunta: "<<primeroB->pregunta<<endl;
+    cout<<endl;
 }
 
 void imprimeExamen_Breve(string nombreE){
@@ -264,12 +230,15 @@ void imprimeExamen_Breve(string nombreE){
         cout<<"Seccion: "<<tempImprime->b->nombreB<<endl;
 
         while(tempImprime != NULL){
+
                 cout<<"Id: "<<tempImprime->b->id<<endl;
                 cout<<"Puntos: "<<tempImprime->b->puntaje<< endl;
                 cout<<"Pregunta: "<<tempImprime->b->pregunta<<endl;
                 tempImprime = tempImprime-> sig;
-            }
+        }
+        tempImprime = temp->eb;
     }
+
 
 }
 
@@ -281,6 +250,18 @@ void imprimeUnica(){
     }
 }
 ///------------------------------------------FIN METODOS DE IMPRIMIR------------------------------------///
+
+///--------------------------------------------METODOS DE MODIFICAR------------------------------------///
+
+
+void modificarPregunta(){
+
+}
+
+void modificarExamen(){
+
+}
+///------------------------------------FIN METODOS DE MODIFICAR---------------------------------///
 
 
 ///------------------------------------------INICIO MENU-------------------------------------------------///
@@ -311,14 +292,52 @@ void menuSolu(){
 }
 
 void menuCrear(){
-    string nombre;
-    int puntos;
-    cout<<"\t\tCreacion de examenes";
-    insertarExamen(nombre, puntos);
+    cout<<"\t\t\tAgregar preguntas a  examenes"<<endl;
+    cout<<endl;
+    string nombre,opcion,n,preg,resC;
+    int i,p;
+    cout<<"Digite que desea agregar:"<<endl;
+    cout<<"\n1.Unica";
+    cout<<"\n2.Breve";
+    cout<<"\n3.Volver atras";
+    cout<<"\nDigite la opcion que desea: ";
+    cin>>opcion;
+    if(opcion == "1"){
+        system("cls");
+    }
+    else if(opcion == "2"){
+        system("cls");
+        cout<<"Nombre de la seccion: ";
+        cin>>n;
+        cout<<"Id pregunta: ";
+        cin>>i;
+        cout<<"Puntaje pregunta: ";
+        cin>>p;
+        cout<<"Pregunta: ";
+        cin>>preg;
+        cout<<"Respuesta correcta de la pregunta: ";
+        cin>>resC;
+        insertarBreve(n,i,p,preg,resC);
+        cout<<"Nombre del examen al que desea agregar la pregunta: ";
+        cin>>nombre;
+        insertarExamen_breve(n,nombre);
+        system("cls");
+        cout<<"Datos insertados con exito!!";
+        menuMante();
+    }
+    else if(opcion == "3"){
+        system("cls");
+        menuMante();
+    }
+    else{
+        system("cls");
+        cout<<"Opcion incorrecta.";
+        menuCrear();
+    }
 }
 void menuMante(){
     cout<<"\t\tMenu mantenimiento de datos";
-    cout<<"\n\n1.Crear examen";
+    cout<<"\n\n1.Creacion de preguntas";
     cout<<"\n2.Borrar";
     cout<<"\n3.Modificar";
     cout<<"\n4.Volver atras";
@@ -332,11 +351,12 @@ void menuMante(){
     }
     else if(opcion == "2"){
         system("cls");
+        menuBorrar();
 
     }
     else if(opcion == "3"){
         system("cls");
-
+         menuModificar();
     }
     else if(opcion == "4"){
         system("cls");
@@ -348,9 +368,71 @@ void menuMante(){
         menuMante();
     }
 }
+
+void menuModificar(){
+    cout<<"\t\t\tMenu Modificar";
+    cout<<"\n1.Modificar preguntas";
+    cout<<"\n2.Modificar examen";
+    cout<<"\n3.Volver atras";
+    cout<<"\n\nDigite el numero de la opcion que desea: ";
+    string opcion;
+    cin>>opcion;
+    if(opcion =="1"){
+        system("cls");
+        modificarPregunta();
+
+    }
+    else if(opcion == "2"){
+        system("cls");
+        modificarExamen;
+
+    }
+    else if(opcion == "3"){
+        system("cls");
+        menuMante();
+    }
+    else{
+        system("cls");
+        cout<<"Opcion equivocada, intente de nuevo"<<endl;
+        menuModificar();
+    }
+
+}
+
+void menuBorrar(){
+    cout<<"\t\t\tMenu Borrar";
+    cout<<"\n1.Borrar preguntas";
+    cout<<"\n2.Borrar examen";
+    cout<<"\n3.Borrar Secciones";
+    cout<<"\n4.Volver atras";
+    cout<<"\n\nDigite el numero de la opcion que desea: ";
+    string opcion;
+    cin>>opcion;
+    if(opcion =="1"){
+        system("cls");
+
+    }
+    else if(opcion == "2"){
+        system("cls");
+
+
+    }
+    else if(opcion == "3"){
+        system("cls");
+    }
+    else if(opcion == "4"){
+        system("cls");
+        menuMante();
+    }
+    else{
+        system("cls");
+        cout<<"Opcion equivocada, intente de nuevo"<<endl;
+        menuModificar();
+    }
+}
 void menuPrincipal(){
     cout<<"\t\tCreacion de examenes";
-    cout<<"\n\n1.Mantenimiento de Datos";
+    cout<<"\n1.Mantenimiento de Datos";
     cout<<"\n2.Solucionar examen";
     cout<<"\n3.Salir";
     cout<<"\n\nDigite el numero de la opcion que desea: ";
@@ -380,15 +462,15 @@ void menuPrincipal(){
 void loadData(){
 
     ///-------------------EXAMENES---------------------------///
-   insertarExamen("E1",56);
-   insertarExamen("E2",56);
-   insertarExamen("E3",56);
+   insertarExamen("E1");
+   insertarExamen("E2");
+   insertarExamen("E3");
 
 
    ///-----------------------RESPUESTA BREVE-----------------///
-   insertarBreve("Breve1",1,23,"yo soy","yo");
-   insertarBreve("Breve1",2,23,"yo soy","yo");
-   insertarBreve("Breve1",3,23,"yo soy","yo");
+   insertarBreve("Breve1",1,22,"yo soy","yo");
+   insertarBreve("Breve1",2,23,"yo es","yo");
+   insertarBreve("Breve1",3,24,"yo fui","yo");
 
     ///-------------------------EXAMEN CON RESPUESTA BREVE---------------------///
     insertarExamen_breve("Breve1","E1");
@@ -403,8 +485,8 @@ void loadData(){
 int main()
 {
     loadData();
+
     imprimeExamen_Breve("E1");
     //menuPrincipal();
 
-    //imprimeExamen_Breve("E1");
 }
