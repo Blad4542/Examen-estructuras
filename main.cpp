@@ -200,6 +200,15 @@ void insertarExamen_unica(string nombreU,string nombreE, int nu, int p, string p
     }
 }
 
+void insertarUnica_alternativa(string nombreU, string opcion){
+    struct unica * tempU = buscarUnica(nombreU);
+    if(tempU !=NULL){
+        struct alternativa * nn = new alternativa(opcion);
+
+    }
+}
+
+
 void insertarExamen(string nombreE){
     struct examen * buscar = buscarExamen(nombreE);
     struct examen * nn = new examen(nombreE);
@@ -215,6 +224,7 @@ void insertarExamen(string nombreE){
     primeroE = nn;
 
 }
+
 
 ///-------------------------------FIN METODOS DE INSERTAR---------------------------------------///
 
@@ -281,8 +291,50 @@ void imprimeExamen_Breve(string nombreE){
         tempImprime = temp->eb;
         cout<<"Total de puntos obtenidos: "<<cont<<endl;
     }
+}
 
+void imprimeExamen_unica(string nombreE){
+    string opcion;
+    int cont = 0;
+    struct examen * temp = buscarExamen(nombreE);
 
+    if (temp == NULL)
+    {
+        cout<<"\nEste examen no existe o la lista esta vacia..!!"<<endl;
+        return;
+    }
+    cout<<"Secciones del examen: "<< temp->nombreE <<"."<< endl;
+
+    if (temp->eb == NULL){
+        cout<<"\nEste examen no tiene una seleccion unica creada..."<<endl;
+    }
+    else
+    {
+        struct examen_unica * tempImprime = temp->eu;
+        cout<<"Seccion: "<<tempImprime->u->nombreU<<endl;
+
+        while(tempImprime != NULL){
+                cout<<endl;
+                cout<<"Id: "<<tempImprime->num<<endl;
+                cout<<"Puntos: "<<tempImprime->puntaje<< endl;
+                cout<<"Pregunta: "<<tempImprime->pregunta<<endl;
+
+                cout<<"Digite la respuesta de la pregunta: ";
+                cin>>opcion;
+                if(tempImprime->resCorrecta == opcion){
+                    cout<<"Respuesta Correcta"<<endl;
+                    cont = cont + tempImprime->puntaje;
+                    cout<<"Puntos obtenidos: "<<cont<<endl;
+                }
+                else{
+                   cout<<"Respuesta incorrecta, la respuesta es: "<<tempImprime->resCorrecta<<endl;
+                   cout<<"Puntos obtenidos: "<<cont<<endl;
+                }
+                tempImprime = tempImprime-> sig;
+        }
+        tempImprime = temp->eu;
+        cout<<"Total de puntos obtenidos: "<<cont<<endl;
+    }
 }
 
 void imprimeUnica(){
@@ -557,8 +609,8 @@ void loadData(){
 int main()
 {
     loadData();
-
-    imprimeExamen_Breve("E1");
+    imprimeExamen_unica("E1");
+    //imprimeExamen_Breve("E1");
     //menuPrincipal();
 
 }
