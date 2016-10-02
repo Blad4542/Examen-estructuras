@@ -258,7 +258,27 @@ void modificarPregunta(){
 
 }
 
-void modificarExamen(){
+void modificarExamen(string n){
+
+    struct examen * temp = buscarExamen(n);
+
+    if(temp == NULL){
+        cout << "No se encontro un examen con ese nombre" << endl;
+        return;
+    }
+
+    string nombre;
+    cout << "Nuevo nombre: ";
+    cin >> nombre;
+    struct examen *temp2 = buscarExamen(nombre);
+
+    while(temp2 != NULL){
+        cout << "Ese nombre ya se encuentra ocupado" << endl << endl;
+        cout << "Nuevo nombre: ";
+        cin >> nombre;
+        temp2 = buscarExamen(nombre);
+    }
+    temp->nombreE = nombre;
 
 }
 ///------------------------------------FIN METODOS DE MODIFICAR---------------------------------///
@@ -375,7 +395,7 @@ void menuModificar(){
     cout<<"\n2.Modificar examen";
     cout<<"\n3.Volver atras";
     cout<<"\n\nDigite el numero de la opcion que desea: ";
-    string opcion;
+    string opcion,nombre;
     cin>>opcion;
     if(opcion =="1"){
         system("cls");
@@ -384,7 +404,11 @@ void menuModificar(){
     }
     else if(opcion == "2"){
         system("cls");
-        modificarExamen;
+        cout<<"Escriba el nombre del examen que desea modificar: ";
+        cin>>nombre;
+        modificarExamen(nombre);
+        cout<<"Dato modificado con exito!!!";
+
 
     }
     else if(opcion == "3"){
