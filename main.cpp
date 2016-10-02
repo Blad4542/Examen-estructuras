@@ -46,12 +46,12 @@ struct breve{
 }*primeroB;
 
 struct unica{
-    string nombre;
+    string nombreU;
     struct alternativa * opcion;
     struct unica *sig;
 
     unica(string n){
-        nombre = n;
+        nombreU = n;
         sig = NULL;
     }
 }*primeroU;
@@ -138,6 +138,20 @@ struct breve * buscarBreve(string nombre){
     return NULL;
 };
 
+struct unica * buscarUnica(string nombre){
+
+    struct unica * temp = primeroU;
+    if(temp == NULL)
+        return NULL;
+
+    while(temp != NULL){
+        if(temp->nombreU.compare(nombre)== 0)
+            return temp;
+        temp = temp->sig;
+    }
+    return NULL;
+};
+
 ///---------------------------------FIN METODOS DE BUSQUEDA---------------------------------///
 
 
@@ -160,6 +174,7 @@ void insertarBreve(string n){
     primeroB = nn;
 }
 
+
 void insertarExamen_breve(string nombreB, string nombreE, int i, int p, string preg, string resC){
 
     struct breve * tempB = buscarBreve(nombreB);
@@ -170,6 +185,18 @@ void insertarExamen_breve(string nombreB, string nombreE, int i, int p, string p
         nn->b = tempB;
         nn->sig = tempE->eb;
         tempE->eb = nn;
+    }
+}
+
+void insertarExamen_unica(string nombreU,string nombreE, int nu, int p, string pre, string rC ){
+    struct unica * tempU = buscarUnica(nombreU);
+    struct examen * tempE = buscarExamen(nombreE);
+
+    if((tempE != NULL)&&(tempU != NULL)){
+        struct examen_unica *nn = new examen_unica(nu,p, pre, rC);
+        nn->u = tempU;
+        nn->sig = tempE->eu;
+        tempE->eu = nn;
     }
 }
 
@@ -261,7 +288,7 @@ void imprimeExamen_Breve(string nombreE){
 void imprimeUnica(){
     struct unica * temp = primeroU;
     while(temp!=NULL){
-        cout<<temp->nombre<<endl;
+        cout<<temp->nombreU<<endl;
         temp = temp->sig;
     }
 }
@@ -512,11 +539,17 @@ void loadData(){
    insertarBreve("Breve1");
    insertarBreve("Breve1");
 
+   ///-----------------------SELECCION UNICA--------------------------///
+
+   insertarUnica("Unica1");
+
     ///-------------------------EXAMEN CON RESPUESTA BREVE---------------------///
     insertarExamen_breve("Breve1","E1",1,3,"yo soy","yo");
     insertarExamen_breve("Breve1","E1",2,3,"yo es","no");
     insertarExamen_breve("Breve1","E1",3,4,"yo fui","se");
 
+    ///------------------------EXAMEN CON SELECCION UNICA---------------------------///
+    insertarExamen_unica("Unica1","E1",1,1,"¿Cual es la capital de CR?","San Jose");
 }
 
 
