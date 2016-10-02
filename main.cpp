@@ -33,17 +33,12 @@ struct alternativa{
 
 struct breve{
     string nombreB;
-    int id, puntaje;
-    string pregunta, resCorrecta;
+
     struct breve *sig;
     struct breve *ant;
 
-    breve(string n, int i, int p, string preg, string resC){
+    breve(string n){
         nombreB = n;
-        id = i;
-        puntaje = p;
-        pregunta = preg;
-        resCorrecta = resC;
         sig = NULL;
         ant = NULL;
 
@@ -51,26 +46,45 @@ struct breve{
 }*primeroB;
 
 struct unica{
-    int num, puntaje;
-    string pregunta,resCorrecta;
+    string nombre;
     struct alternativa * opcion;
     struct unica *sig;
 
-    unica(int n, int p, string pre, string rC){
-        num = n;
-        puntaje = p;
-        pregunta = pre;
-        resCorrecta = rC;
+    unica(string n){
+        nombre = n;
         sig = NULL;
     }
 }*primeroU;
 
+struct examen_unica{
+    int num, puntaje;
+    string pregunta,resCorrecta;
+    struct unica * u;
+    struct examen_unica * sig;
+
+    examen_unica(int nu, int p, string pre, string rC){
+        num = nu;
+        puntaje = p;
+        pregunta = pre;
+        resCorrecta = rC;
+        sig = NULL;
+        u = NULL;
+
+    }
+};
+
 struct examen_breve{
+    int id, puntaje;
+    string pregunta, resCorrecta;
     struct breve * b;
     struct examen_breve * sig;
     struct examen_breve * eb;
 
-    examen_breve(){
+    examen_breve(int i, int p, string preg, string resC){
+        id = i;
+        puntaje = p;
+        pregunta = preg;
+        resCorrecta = resC;
         sig = NULL;
         b = NULL;
 
@@ -78,17 +92,7 @@ struct examen_breve{
 };
 
 
-struct examen_unica{
-    struct unica * u;
-    struct examen_unica * sig;
 
-    examen_unica(){
-
-        sig = NULL;
-        u = NULL;
-
-    }
-};
 ///---------------------FIN ESTRUCTURAS------------------------------------///
 
 
@@ -142,27 +146,27 @@ struct breve * buscarBreve(string nombre){
 
 
 
-void insertarUnica(int num, int puntaje, string pregunta, string resCorrecta){
-    struct unica * nn = new unica(num,puntaje,pregunta,resCorrecta);
+void insertarUnica(string n){
+    struct unica * nn = new unica(n);
     nn->sig = primeroU;
     primeroU = nn;
 }
 
-void insertarBreve(string n, int i, int p, string preg, string resC){
+void insertarBreve(string n){
     struct breve * buscar = buscarBreve(n);
 
-    struct breve * nn = new breve(n, i, p, preg, resC);
+    struct breve * nn = new breve(n);
     nn->sig = primeroB;
     primeroB = nn;
 }
 
-void insertarExamen_breve(string nombreB, string nombreE){
+void insertarExamen_breve(string nombreB, string nombreE, int i, int p, string preg, string resC){
 
     struct breve * tempB = buscarBreve(nombreB);
     struct examen * tempE = buscarExamen(nombreE);
 
     if((tempE != NULL)&&(tempB != NULL)){
-        struct examen_breve *nn = new examen_breve();
+        struct examen_breve *nn = new examen_breve(i,p, preg, resC);
         nn->b = tempB;
         nn->sig = tempE->eb;
         tempE->eb = nn;
@@ -203,15 +207,14 @@ void imprimeBreve(struct breve * primeroB){
         return;
 
     imprimeBreve(primeroB->sig);
-    cout<<primeroB->nombreB<<endl;
+    cout<<"Nombre de la seccion"<<primeroB->nombreB<<endl;
     cout<<endl;
-    cout<<"Id pregunta: "<<primeroB->id<<endl;
-    cout<<"Valor: "<<primeroB->puntaje<<" puntos"<<endl;
-    cout<<"Pregunta: "<<primeroB->pregunta<<endl;
-    cout<<endl;
+
 }
 
 void imprimeExamen_Breve(string nombreE){
+    string opcion;
+    int cont = 0;
     struct examen * temp = buscarExamen(nombreE);
 
     if (temp == NULL)
@@ -230,13 +233,26 @@ void imprimeExamen_Breve(string nombreE){
         cout<<"Seccion: "<<tempImprime->b->nombreB<<endl;
 
         while(tempImprime != NULL){
+                cout<<endl;
+                cout<<"Id: "<<tempImprime->id<<endl;
+                cout<<"Puntos: "<<tempImprime->puntaje<< endl;
+                cout<<"Pregunta: "<<tempImprime->pregunta<<endl;
 
-                cout<<"Id: "<<tempImprime->b->id<<endl;
-                cout<<"Puntos: "<<tempImprime->b->puntaje<< endl;
-                cout<<"Pregunta: "<<tempImprime->b->pregunta<<endl;
+                cout<<"Escriba la respuesta de la pregunta: ";
+                cin>>opcion;
+                if(tempImprime->resCorrecta == opcion){
+                    cout<<"Respuesta Correcta"<<endl;
+                    cont = cont + tempImprime->puntaje;
+                    cout<<"Puntos obtenidos: "<<cont<<endl;
+                }
+                else{
+                   cout<<"Respuesta incorrecta, la respuesta es: "<<tempImprime->resCorrecta<<endl;
+                   cout<<"Puntos obtenidos: "<<cont<<endl;
+                }
                 tempImprime = tempImprime-> sig;
         }
         tempImprime = temp->eb;
+        cout<<"Total de puntos obtenidos: "<<cont<<endl;
     }
 
 
@@ -245,7 +261,7 @@ void imprimeExamen_Breve(string nombreE){
 void imprimeUnica(){
     struct unica * temp = primeroU;
     while(temp!=NULL){
-        cout<<temp->num<<", "<<temp->puntaje<<", "<<temp->pregunta<<", "<<temp->opcion<<", "<<temp->resCorrecta<<endl;
+        cout<<temp->nombre<<endl;
         temp = temp->sig;
     }
 }
@@ -329,6 +345,7 @@ void menuCrear(){
         system("cls");
         cout<<"Nombre de la seccion: ";
         cin>>n;
+        insertarBreve(n);
         cout<<"Id pregunta: ";
         cin>>i;
         cout<<"Puntaje pregunta: ";
@@ -337,10 +354,9 @@ void menuCrear(){
         cin>>preg;
         cout<<"Respuesta correcta de la pregunta: ";
         cin>>resC;
-        insertarBreve(n,i,p,preg,resC);
         cout<<"Nombre del examen al que desea agregar la pregunta: ";
         cin>>nombre;
-        insertarExamen_breve(n,nombre);
+        insertarExamen_breve(n,nombre,i,p,preg,resC);
         system("cls");
         cout<<"Datos insertados con exito!!";
         menuMante();
@@ -492,17 +508,16 @@ void loadData(){
 
 
    ///-----------------------RESPUESTA BREVE-----------------///
-   insertarBreve("Breve1",1,22,"yo soy","yo");
-   insertarBreve("Breve1",2,23,"yo es","yo");
-   insertarBreve("Breve1",3,24,"yo fui","yo");
+   insertarBreve("Breve1");
+   insertarBreve("Breve1");
+   insertarBreve("Breve1");
 
     ///-------------------------EXAMEN CON RESPUESTA BREVE---------------------///
-    insertarExamen_breve("Breve1","E1");
-    insertarExamen_breve("Breve1","E1");
-    insertarExamen_breve("Breve1","E1");
+    insertarExamen_breve("Breve1","E1",1,3,"yo soy","yo");
+    insertarExamen_breve("Breve1","E1",2,3,"yo es","no");
+    insertarExamen_breve("Breve1","E1",3,4,"yo fui","se");
 
 }
-
 
 
 ///-------------------------------------------FIN MENU-----------------------------------------------------///
