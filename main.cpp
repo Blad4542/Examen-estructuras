@@ -41,7 +41,6 @@ struct breve{
         nombreB = n;
         sig = NULL;
         ant = NULL;
-
     }
 }*primeroB;
 
@@ -159,7 +158,6 @@ struct unica * buscarUnica(string nombre){
 ///---------------------METODOS DE INSERTAR------------------------------------///
 
 
-
 void insertarUnica(string n){
     struct unica * nn = new unica(n);
     nn->sig = primeroU;
@@ -203,11 +201,11 @@ void insertarExamen_unica(string nombreU,string nombreE, int nu, int p, string p
 void insertarUnica_alternativa(string nombreU, string opcion){
     struct unica * tempU = buscarUnica(nombreU);
     if(tempU !=NULL){
-        struct alternativa * nn = new alternativa(opcion);
-
-    }
+            struct alternativa * nn = new alternativa(opcion);
+            nn->sig = tempU->opcion;
+            tempU->opcion = nn;
+        }
 }
-
 
 void insertarExamen(string nombreE){
     struct examen * buscar = buscarExamen(nombreE);
@@ -318,7 +316,7 @@ void imprimeExamen_unica(string nombreE){
                 cout<<"Id: "<<tempImprime->num<<endl;
                 cout<<"Puntos: "<<tempImprime->puntaje<< endl;
                 cout<<"Pregunta: "<<tempImprime->pregunta<<endl;
-
+                cout<<"Opciones:"<<endl;
                 cout<<"Digite la respuesta de la pregunta: ";
                 cin>>opcion;
                 if(tempImprime->resCorrecta == opcion){
@@ -335,6 +333,10 @@ void imprimeExamen_unica(string nombreE){
         tempImprime = temp->eu;
         cout<<"Total de puntos obtenidos: "<<cont<<endl;
     }
+}
+
+void imprimeUnica_alternativa(){
+
 }
 
 void imprimeUnica(){
@@ -378,32 +380,20 @@ void modificarExamen(string n){
 }
 ///------------------------------------FIN METODOS DE MODIFICAR---------------------------------///
 
+///------------------------------------------INICIO METODOS DE BORRAR----------------------------------///
 
+
+///--------------------------------------------FIN METODOS DE BORRAR----------------------------------///
 ///------------------------------------------INICIO MENU-------------------------------------------------///
 
 void menuSolu(){
-    cout<<"\t\tSolucion de examenes";
+    cout<<"\t\tSolucion de examenes"<<endl;
     imprimeExamen();
     cout<<"\n1.Volver atras.";
-    cout<<"\n\nDigite el numero del examen que desea responder: ";
-    string  opcion;
-    cin>> opcion;
-    if(opcion =="1"){
-        system("cls");
-    }
-    else if(opcion == "2"){
-        system("cls");
-
-    }
-    else if(opcion == "3"){
-        system("cls");
-        return;
-    }
-    else{
-        system("cls");
-        cout<<"Opcion no valida, intente de nuevo\n";
-        menuPrincipal();
-    }
+    cout<<"\n\nEscriba el nombre del examen que desea responder: ";
+    string  opcion, nombreE;
+    cin>> nombreE;
+    imprimeExamen_Breve(nombreE);
 }
 
 void menuCrear(){
@@ -591,17 +581,28 @@ void loadData(){
    insertarBreve("Breve1");
    insertarBreve("Breve1");
 
+    insertarBreve("Breve2");
+    insertarBreve("Breve2");
+    insertarBreve("Breve2");
+
+
    ///-----------------------SELECCION UNICA--------------------------///
 
    insertarUnica("Unica1");
 
     ///-------------------------EXAMEN CON RESPUESTA BREVE---------------------///
-    insertarExamen_breve("Breve1","E1",1,3,"yo soy","yo");
-    insertarExamen_breve("Breve1","E1",2,3,"yo es","no");
-    insertarExamen_breve("Breve1","E1",3,4,"yo fui","se");
+    insertarExamen_breve("Breve1","E1",1,3,"El mejor equipo de costa rica es","Saprissa (no, no es la liga profe xD)");
+    insertarExamen_breve("Breve1","E1",2,3,"Campeon nacional actual","Herediano");
+    insertarExamen_breve("Breve1","E1",3,4,"Mejor universidad de CR","TEC");
+
+    insertarExamen_breve("Breve2","E2",1,3,"Hola soy","yo");
+    insertarExamen_breve("Breve2","E2",2,3,"Apellido del profe Rogelio","Gonzales");
+    insertarExamen_breve("Breve2","E2",3,4,"Profe de poo","Lorena");
 
     ///------------------------EXAMEN CON SELECCION UNICA---------------------------///
-    insertarExamen_unica("Unica1","E1",1,1,"¿Cual es la capital de CR?","San Jose");
+    insertarExamen_unica("Unica1","E1",1,1,"Cual es la capital de CR?","San Jose");
+
+    insertarUnica_alternativa("Unica1","A)Pene");
 }
 
 
@@ -609,8 +610,8 @@ void loadData(){
 int main()
 {
     loadData();
-    imprimeExamen_unica("E1");
+    //imprimeExamen_unica("E1");
     //imprimeExamen_Breve("E1");
-    //menuPrincipal();
+    menuPrincipal();
 
 }
